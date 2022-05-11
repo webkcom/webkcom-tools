@@ -1,0 +1,4 @@
+### IPDetector ###
+# ignore folder
+obj/
+bin/

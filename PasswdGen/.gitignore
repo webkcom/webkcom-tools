@@ -1,0 +1,4 @@
+### PasswdGen ###
+# ignore folder
+obj/
+bin/
