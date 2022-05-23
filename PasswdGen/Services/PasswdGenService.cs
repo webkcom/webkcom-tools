@@ -10,15 +10,15 @@ namespace PasswdGen.Service
             // PasswdGenModel resultString = new PasswdGenModel();
             if (containNumbers && !containLetters && !containSymbols)
             {
-                return JsonString(pureNumbers(length));
+                return JsonString(onlyNumbers(length));
             }
             else if (containLetters && !containNumbers && !containSymbols)
             {
-                return JsonString(pureLetters(length));
+                return JsonString(onlyLetters(length));
             }
             else if (containSymbols && !containNumbers && !containLetters)
             {
-                return JsonString(pureSymbols(length));
+                return JsonString(onlySymbols(length));
             }
             else if (containNumbers && containLetters && !containSymbols)
             {
@@ -48,7 +48,7 @@ namespace PasswdGen.Service
             return jsonString;
         }
 
-        public string pureNumbers(int length)
+        public string onlyNumbers(int length)
         {
             Random random = new Random();
             string numbers = "";
@@ -59,7 +59,7 @@ namespace PasswdGen.Service
             return numbers;
         }
 
-        public string pureLetters(int length)
+        public string onlyLetters(int length)
         {
             Random random = new Random();
             string str1 = "";
@@ -81,7 +81,7 @@ namespace PasswdGen.Service
             return str2;
         }
 
-        public string pureSymbols(int length)
+        public string onlySymbols(int length)
         {
             Random random = new Random();
             string str1 = "";
@@ -124,18 +124,18 @@ namespace PasswdGen.Service
             while ((n1 + n2 != length) || n1 == 0 || n2 == 0);
             if (value1 == "numbers" && value2 == "letters")
             {
-                str_1 = pureNumbers(n1);
-                str_2 = pureLetters(n2);
+                str_1 = onlyNumbers(n1);
+                str_2 = onlyLetters(n2);
             }
             else if (value1 == "numbers" && value2 == "symbols")
             {
-                str_1 = pureNumbers(n1);
-                str_2 = pureSymbols(n2);
+                str_1 = onlyNumbers(n1);
+                str_2 = onlySymbols(n2);
             }
             else if (value1 == "letters" && value2 == "symbols")
             {
-                str_1 = pureLetters(n1);
-                str_2 = pureSymbols(n2);
+                str_1 = onlyLetters(n1);
+                str_2 = onlySymbols(n2);
             }
             str = str_1 + str_2;
             char[] arr = (str).ToCharArray();
@@ -164,9 +164,9 @@ namespace PasswdGen.Service
                 n3 = random.Next(length);
             }
             while ((n1 + n2 + n3 != length) || n1 == 0 || n2 == 0 || n3 == 0);
-            str1 = pureNumbers(n1);
-            str2 = pureLetters(n2);
-            str3 = pureSymbols(n3);
+            str1 = onlyNumbers(n1);
+            str2 = onlyLetters(n2);
+            str3 = onlySymbols(n3);
             str = str1 + str2 + str3;
             char[] arr = (str).ToCharArray();
             for (int l = (str).Length - 1; l >= 0; l--)
