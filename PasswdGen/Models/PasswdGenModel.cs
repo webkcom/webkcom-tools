@@ -9,7 +9,7 @@ namespace PasswdGen.Models
     //     public string? result {get;set;}
     // }
 
-    public class ResultModel
+    public class PasswdGenModel
     {
         public string? Result {get;set;}
     }

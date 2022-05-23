@@ -7,7 +7,7 @@ namespace PasswdGen.Service
     {
         public string getResult(bool containNumbers, bool containLetters, bool containSymbols, int length)
         {
-            // ResultModel resultString = new ResultModel();
+            // PasswdGenModel resultString = new PasswdGenModel();
             if (containNumbers && !containLetters && !containSymbols)
             {
                 return JsonString(pureNumbers(length));
@@ -40,7 +40,7 @@ namespace PasswdGen.Service
 
         public string JsonString(string value)
         {
-            var jsonObject = new ResultModel
+            var jsonObject = new PasswdGenModel
             {
                 Result = value
             };
