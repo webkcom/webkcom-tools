@@ -11,7 +11,7 @@ namespace PasswdGen.Models
 
     public class ResultModel
     {
-        public string? result {get;set;}
+        public string? Result {get;set;}
     }
 
 }

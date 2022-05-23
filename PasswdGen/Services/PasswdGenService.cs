@@ -42,7 +42,7 @@ namespace PasswdGen.Service
         {
             var jsonObject = new ResultModel
             {
-                result = value
+                Result = value
             };
             string jsonString = JsonSerializer.Serialize(jsonObject);
             return jsonString;
