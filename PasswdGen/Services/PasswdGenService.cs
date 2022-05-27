@@ -5,37 +5,16 @@ namespace PasswdGen.Service
 {
     public class PasswdGenService
     {
-        public string getResult(bool containNumbers, bool containLetters, bool containSymbols, int length)
+        private const string ContainNumbers = "0123456789";
+        private const string ContainUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const string ContainLowercase = "abcdefghijklmnopqrstuvwxyz";
+        private const string ContainSpchar = @"!""#$%&'()*+'-./:;<=>?@[\]^_`{|}~";
+        public string passwdGen(bool containNumbers, bool containUppercase, bool containLowercase, bool containSpchar, int strLength, int count)
         {
-            // PasswdGenModel resultString = new PasswdGenModel();
-            if (containNumbers && !containLetters && !containSymbols)
-            {
-                return JsonString(onlyNumbers(length));
-            }
-            else if (containLetters && !containNumbers && !containSymbols)
-            {
-                return JsonString(onlyLetters(length));
-            }
-            else if (containSymbols && !containNumbers && !containLetters)
-            {
-                return JsonString(onlySymbols(length));
-            }
-            else if (containNumbers && containLetters && !containSymbols)
-            {
-                return JsonString(numbersAddLetters(length));
-            }
-            else if (containNumbers && !containLetters && containSymbols)
-            {
-                return JsonString(numbersAddSymbols(length));
-            }
-            else if (!containNumbers && containLetters && containSymbols)
-            {
-                return JsonString(lettersAddSymbols(length));
-            }
-            else
-            {
-                return JsonString(mixAll(length));
-            }
+            List<string> range = getRange(containNumbers, containUppercase, containLowercase, containSpchar, strLength, count);
+            int[] randomNum = randomSelect(range.Count, strLength);
+            string result = spliceString(range, randomNum, strLength, count);
+            return JsonString(result);
         }
 
         public string JsonString(string value)
@@ -47,156 +26,75 @@ namespace PasswdGen.Service
             string jsonString = JsonSerializer.Serialize(jsonObject);
             return jsonString;
         }
-
-        public string onlyNumbers(int length)
+        // 获取密码包含的元素范围
+        public List<string> getRange(bool containNumbers, bool containUppercase, bool containLowercase, bool containSpchar, int strlength, int count)
         {
-            Random random = new Random();
-            string numbers = "";
-            for (int i = 0; i < length; i++)
+            List<string> range = new List<string>();
+            if (containNumbers)
             {
-                numbers += random.Next(10).ToString();
+                range.Add(ContainNumbers);
             }
-            return numbers;
+            if (containUppercase)
+            {
+                range.Add(ContainUppercase);
+            }
+            if (containLowercase)
+            {
+                range.Add(ContainLowercase);
+            }
+            if (containSpchar)
+            {
+                range.Add(ContainSpchar);
+            }
+            return range;
         }
-
-        public string onlyLetters(int length)
+        // 随机分配不同组的抽取次数
+        public int[] randomSelect(int arrlength, int strlength)
         {
-            Random random = new Random();
-            string str1 = "";
-            string str2 = "";
-            int n1, n2 = 0;
-            for (int i = 0; i < length; i++)
-            {
-                n1 = random.Next(26) + 65;
-                n2 = random.Next(26) + 97;
-                str1 += Convert.ToString((char)n1) + Convert.ToString((char)n2);
-            }
-            char[] arr = str1.ToCharArray();
-            for (int j = length - 1; j >= 0; j--)
-            {
-                int index = random.Next(0, j);
-                str2 += arr[index];
-                arr[index] = arr[j];
-            }
-            return str2;
-        }
-
-        public string onlySymbols(int length)
-        {
-            Random random = new Random();
-            string str1 = "";
-            string str2 = "";
-            int n1, n2, n3, n4 = 0;
-            for (int i = 0; i < length; i++)
-            {
-                n1 = random.Next(15) + 33;
-                n2 = random.Next(7) + 58;
-                n3 = random.Next(6) + 91;
-                n4 = random.Next(4) + 123;
-                str1 += Convert.ToString((char)n1) + Convert.ToString((char)n2) + Convert.ToString((char)n3) + Convert.ToString((char)n4);
-            }
-            char[] arr = str1.ToCharArray();
-            for (int j = length - 1; j >= 0; j--)
-            {
-                int index = random.Next(0, j);
-                str2 += arr[index];
-                arr[index] = arr[j];
-            }
-            return str2;
-        }
-
-        public string mixTwoString(int length, string value1, string value2)
-        {
-            // 算法改良-避免字符串过短时导致生成的字符串不符合条件
-            Random random = new Random();
-            string str = "";
-            string _str = "";
-            string str_1 = "";
-            string str_2 = "";
-            string str1 = value1;
-            string str2 = value2;
-            int n1, n2 = 0;
+            int[] randomNum = new int[arrlength];
+            int sum = 0;
             do
             {
-                n1 = random.Next(length);
-                n2 = random.Next(length);
+                // 给不同的数组分配随机抽取次数,保证符合条件的字符至少有一位
+                sum = 0;
+                for (int i = 0; i < arrlength; i++)
+                {
+                    randomNum[i] = Random.Shared.Next(1, strlength);
+                    sum += randomNum[i];
+                }
             }
-            while ((n1 + n2 != length) || n1 == 0 || n2 == 0);
-            if (value1 == "numbers" && value2 == "letters")
-            {
-                str_1 = onlyNumbers(n1);
-                str_2 = onlyLetters(n2);
-            }
-            else if (value1 == "numbers" && value2 == "symbols")
-            {
-                str_1 = onlyNumbers(n1);
-                str_2 = onlySymbols(n2);
-            }
-            else if (value1 == "letters" && value2 == "symbols")
-            {
-                str_1 = onlyLetters(n1);
-                str_2 = onlySymbols(n2);
-            }
-            str = str_1 + str_2;
-            char[] arr = (str).ToCharArray();
-            for (int i = (str).Length - 1; i >= 0; i--)
-            {
-                int index = random.Next(0, i);
-                _str += arr[index];
-                arr[index] = arr[i];
-            }
-            return _str;
+            while (sum != strlength);
+            return randomNum;
         }
 
-        public string mixAll(int length)
+        // 拼接并打乱字符串顺序
+        public string spliceString(List<string> range, int[] randomNum, int strLength, int count)
         {
-            Random random = new Random();
-            string str = "";
-            string _str = "";
-            string str1 = "";
-            string str2 = "";
-            string str3 = "";
-            int n1, n2, n3 = 0;
-            do
+            // string temp = "";
+            string result = "";
+            for (int i = 0; i < count; i++)
             {
-                n1 = random.Next(length);
-                n2 = random.Next(length);
-                n3 = random.Next(length);
+                string temp = "";
+                for (int j = 0; j < randomNum.Length; j++)
+                {
+                    for (int k = 0; k < randomNum[j]; k++)
+                    {
+                        int index = Random.Shared.Next(range[j].Length);
+                        temp += range[j].Substring(index, 1);
+                    }
+                }
+                char[] arr = temp.ToCharArray();
+                for (int l = strLength - 1; l >= 0; l--)
+                {
+                    int index = Random.Shared.Next(0, l);
+                    result += arr[index];
+                    arr[index] = arr[l];
+                }
+                result += "\n";
             }
-            while ((n1 + n2 + n3 != length) || n1 == 0 || n2 == 0 || n3 == 0);
-            str1 = onlyNumbers(n1);
-            str2 = onlyLetters(n2);
-            str3 = onlySymbols(n3);
-            str = str1 + str2 + str3;
-            char[] arr = (str).ToCharArray();
-            for (int l = (str).Length - 1; l >= 0; l--)
-            {
-                int index = random.Next(0, l);
-                _str += arr[index];
-                arr[index] = arr[l];
-            }
-            return _str;
+            return result;
         }
 
-        public string numbersAddLetters(int length)
-        {
-            return valueAddValue(length, "numbers", "letters");
-        }
-
-        public string numbersAddSymbols(int length)
-        {
-            return valueAddValue(length, "numbers", "symbols");
-        }
-
-        public string lettersAddSymbols(int length)
-        {
-            return valueAddValue(length, "letters", "symbols");
-        }
-
-        public string valueAddValue(int length, string value1, string value2)
-        {
-            return mixTwoString(length, value1, value2);
-        }
     }
 
 }
