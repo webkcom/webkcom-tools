@@ -10,10 +10,10 @@ namespace PasswdGen.Controllers
     public class PasswdGenController : ControllerBase
     {
         [HttpGet("GetResult")]
-        public string getResult(bool containNumbers, bool containLetters, bool containSymbols, int length)
+        public string getResult(bool containNumbers, bool containUppercase,bool containLowercase, bool containSpchar, int strLength, int count)
         {
             PasswdGenService request = new PasswdGenService();
-            return request.getResult(containNumbers,containLetters,containSymbols,length);
+            return request.passwdGen(containNumbers,containUppercase,containLowercase,containSpchar,strLength,count);
         }
     }
 }

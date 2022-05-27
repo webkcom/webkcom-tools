@@ -66,7 +66,6 @@ namespace PasswdGen.Service
             while (sum != strlength);
             return randomNum;
         }
-
         // 拼接并打乱字符串顺序
         public string spliceString(List<string> range, int[] randomNum, int strLength, int count)
         {
