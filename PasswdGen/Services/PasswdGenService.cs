@@ -55,15 +55,14 @@ namespace PasswdGen.Service
             int sum = 0;
             do
             {
-                // 给不同的数组分配随机抽取次数,保证符合条件的字符至少有一位
                 sum = 0;
                 for (int i = 0; i < arrlength; i++)
                 {
-                    randomNum[i] = Random.Shared.Next(1, strlength);
+                    randomNum[i] = Random.Shared.Next(1, strlength-arrlength+2);
                     sum += randomNum[i];
                 }
             }
-            while (sum != strlength);
+            while (sum != strlength);// 保证符合条件的字符至少有一位
             return randomNum;
         }
         // 拼接并打乱字符串顺序
